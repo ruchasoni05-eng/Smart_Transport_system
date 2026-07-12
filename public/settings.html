@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<script>
+  (function() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user && window.location.pathname !== '/login' && window.location.pathname !== '/') {
+      window.location.href = '/login';
+    }
+  })();
+</script>
+
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>TransitOps | Settings</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary": "#0058be",
+            "on-background": "#1b1b1d",
+            "inverse-surface": "#303032",
+            "surface-bright": "#fcf8fa",
+            "tertiary-container": "#271901",
+            "tertiary": "#000000",
+            "on-surface-variant": "#45464d",
+            "surface-container-high": "#eae7e9",
+            "secondary-container": "#2170e4",
+            "on-primary-container": "#7c839b",
+            "surface-tint": "#565e74",
+            "inverse-on-surface": "#f3f0f2",
+            "on-primary": "#ffffff",
+            "inverse-primary": "#bec6e0",
+            "surface": "#fcf8fa",
+            "on-primary-fixed-variant": "#3f465c",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#fefcff",
+            "primary-fixed": "#dae2fd",
+            "primary": "#000000",
+            "surface-container-highest": "#e4e2e4",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#bec6e0",
+            "surface-container": "#f0edef",
+            "on-tertiary-fixed-variant": "#574425",
+            "primary-container": "#131b2e",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-dim": "#dcd9db",
+            "on-secondary-fixed": "#001a42",
+            "background": "#fcf8fa",
+            "surface-container-low": "#f6f3f5",
+            "tertiary-fixed-dim": "#dec29a",
+            "surface-variant": "#e4e2e4",
+            "outline": "#76777d",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "on-surface": "#1b1b1d",
+            "tertiary-fixed": "#fcdeb5",
+            "on-secondary-fixed-variant": "#004395",
+            "secondary-fixed-dim": "#adc6ff",
+            "outline-variant": "#c6c6cd",
+            "on-primary-fixed": "#131b2e",
+            "on-tertiary-container": "#98805d",
+            "on-tertiary-fixed": "#271901",
+            "secondary-fixed": "#d8e2ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "unit": "4px",
+            "sidebar-collapsed": "72px",
+            "sidebar-width": "260px",
+            "gutter": "16px",
+            "container-margin": "24px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface">
+  <div class="app-shell">
+    <!-- NavigationDrawer (Sidebar) -->
+    <aside class="fixed left-0 top-0 h-full w-sidebar-width bg-primary-container shadow-lg z-40 hidden md:flex flex-col py-4 gap-1">
+      <div class="px-6 mb-8 flex items-center gap-3">
+        <span class="material-symbols-outlined text-on-primary-container text-2xl">local_shipping</span>
+        <h1 class="font-headline-sm text-headline-sm font-bold text-on-primary-container">TransitOps</h1>
+      </div>
+      <div class="px-4 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">
+          AR
+        </div>
+        <div>
+          <p class="font-label-md text-label-md text-on-primary-container font-bold">Alex Rivera</p>
+          <p class="text-[10px] text-on-primary-container/60 uppercase tracking-widest">Fleet Manager • TX-492</p>
+        </div>
+      </div>
+      <nav class="flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+        <!-- Rebuilt dynamically at runtime -->
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="md:ml-[260px] flex flex-col min-h-screen">
+      <!-- TopAppBar -->
+      <header class="docked full-width top-0 sticky z-50 flex justify-between items-center px-gutter w-full h-14 bg-surface border-b border-outline-variant transition-colors duration-200">
+        <div class="flex items-center">
+          <button class="md:hidden p-2 text-primary">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <h1 class="font-headline-sm text-headline-sm font-bold text-primary ml-2 md:ml-0">System Settings</h1>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="p-container-margin space-y-8 flex-1">
+        <div class="max-w-4xl mx-auto space-y-6">
+          <!-- General System Settings Card -->
+          <div class="bg-white border border-outline-variant rounded-xl p-6 shadow-sm">
+            <h2 class="text-headline-sm font-bold mb-4 flex items-center gap-2 text-primary">
+              <span class="material-symbols-outlined">settings_applications</span> General Configuration
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-bold text-outline uppercase mb-2">Company Name</label>
+                <input class="w-full px-4 py-2.5 border border-outline-variant bg-white rounded-lg focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" type="text" value="TransitOps Logistics Suite"/>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-outline uppercase mb-2">System Timezone</label>
+                <select class="w-full px-4 py-2.5 border border-outline-variant bg-white rounded-lg focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none">
+                  <option>Central Time (US & Canada)</option>
+                  <option>Eastern Time (US & Canada)</option>
+                  <option>Pacific Time (US & Canada)</option>
+                  <option>UTC / GMT</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification Rule Card -->
+          <div class="bg-white border border-outline-variant rounded-xl p-6 shadow-sm">
+            <h2 class="text-headline-sm font-bold mb-4 flex items-center gap-2 text-primary">
+              <span class="material-symbols-outlined">notifications_active</span> Operational Alerts
+            </h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant/30">
+                <div>
+                  <p class="font-bold text-primary text-body-md">Driver License Warnings</p>
+                  <p class="text-xs text-on-surface-variant">Notify fleet dispatchers 30 days prior to driver CDL expiry.</p>
+                </div>
+                <input class="w-5 h-5 rounded text-secondary focus:ring-secondary cursor-pointer" type="checkbox" checked/>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant/30">
+                <div>
+                  <p class="font-bold text-primary text-body-md">Automatic Overload Blocking</p>
+                  <p class="text-xs text-on-surface-variant">Prevent dispatcher from committing overloaded vehicle assignments.</p>
+                </div>
+                <input class="w-5 h-5 rounded text-secondary focus:ring-secondary cursor-pointer" type="checkbox" checked/>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant/30">
+                <div>
+                  <p class="font-bold text-primary text-body-md">Maintenance Alerts</p>
+                  <p class="text-xs text-on-surface-variant">Notify operations immediately when a vehicle logs an issue.</p>
+                </div>
+                <input class="w-5 h-5 rounded text-secondary focus:ring-secondary cursor-pointer" type="checkbox" checked/>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Controls & Seed Reset -->
+          <div class="bg-white border border-outline-variant rounded-xl p-6 shadow-sm border-red-200">
+            <h2 class="text-headline-sm font-bold mb-2 flex items-center gap-2 text-error">
+              <span class="material-symbols-outlined text-error">warning</span> Danger Zone
+            </h2>
+            <p class="text-xs text-on-surface-variant mb-6">Operations here modify system state database variables directly and cannot be undone.</p>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-error-container/10 border border-error/20 rounded-lg">
+              <div>
+                <p class="font-bold text-error text-body-md">Reset Seed Data</p>
+                <p class="text-xs text-on-surface-variant">Restores all database tables (trips, fleet status, drivers logs) to initial default states.</p>
+              </div>
+              <button class="px-6 py-2.5 bg-error text-white font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm text-xs" onclick="resetDb()">
+                Reset Database
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Bar -->
+      <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+        <!-- Rebuilt dynamically at runtime -->
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    async function resetDb() {
+      if (!confirm('Are you sure you want to reset all database data to seed values? All custom entries will be lost.')) {
+        return;
+      }
+      try {
+        // We will add a simple DB reset route to API
+        const res = await fetch('/api/system/reset', { method: 'POST' });
+        if (res.ok) {
+          alert('Database reset completed successfully.');
+          window.location.href = '/dashboard';
+        } else {
+          alert('Database reset failed.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Network error.');
+      }
+    }
+  </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      // Update profile name
+      const nameEl = document.querySelector('aside span.font-label-md');
+      if (nameEl) nameEl.textContent = user.name;
+      
+      // Update employee ID / role
+      const roleEl = document.querySelector('aside span.text-[10px], aside span.text-on-primary-container\\/60');
+      if (roleEl) roleEl.textContent = user.role + ' (ID: ' + user.employee_id + ')';
+    }
+
+    // Unified Desktop Sidebar Rebuilder
+    let navItems = [
+      { text: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
+      { text: 'Fleet', icon: 'local_shipping', href: '/fleet' },
+      { text: 'Drivers', icon: 'person', href: '/drivers' },
+      { text: 'Trips', icon: 'route', href: '/trips' },
+      { text: 'Maintenance', icon: 'build', href: '/maintenance' },
+      { text: 'Fuel & Expenses', icon: 'local_gas_station', href: '/expenses' },
+      { text: 'Analytics', icon: 'analytics', href: '/analytics' },
+      { text: 'Settings', icon: 'settings', href: '/settings' }
+    ];
+
+    if (user && user.role === 'Driver') {
+      navItems = [
+        { text: 'Driver Portal', icon: 'dashboard', href: '/driver' },
+        { text: 'Settings', icon: 'settings', href: '/settings' }
+      ];
+    }
+
+    const nav = document.querySelector('aside nav, nav[class*="w-sidebar-width"], nav[class*="sidebar"], aside[class*="sidebar"] nav');
+    if (nav) {
+      // Remove any existing nav link elements
+      nav.querySelectorAll('a').forEach(a => a.remove());
+
+      // Append new unified links
+      navItems.forEach(item => {
+        const isActive = item.href === currentPath;
+        const activeClass = "bg-secondary-container text-on-secondary-container rounded-lg mx-2 flex items-center px-4 py-3 gap-3 transition-all duration-200 ease-in-out shadow-sm";
+        const inactiveClass = "text-on-primary-container/70 flex items-center px-4 py-3 mx-2 gap-3 hover:bg-secondary/10 transition-all rounded-lg duration-200 ease-in-out";
+        
+        const link = document.createElement('a');
+        link.className = isActive ? activeClass : inactiveClass;
+        link.setAttribute('href', item.href);
+        link.innerHTML = `
+          <span class="material-symbols-outlined">${item.icon}</span>
+          <span class="font-label-md text-label-md">${item.text}</span>
+        `;
+        nav.appendChild(link);
+      });
+      
+      // Wire up sign out link at the bottom of navigation
+      const logoutBtn = document.createElement('a');
+      logoutBtn.className = "text-on-primary-container/70 flex items-center px-4 py-3 mx-2 gap-3 hover:bg-red-500/20 hover:text-red-300 transition-all rounded-lg mt-8 cursor-pointer duration-200 ease-in-out";
+      logoutBtn.innerHTML = '<span class="material-symbols-outlined">logout</span><span class="font-label-md text-label-md">Sign Out</span>';
+      logoutBtn.addEventListener('click', () => {
+        localStorage.clear();
+        window.location.href = '/login';
+      });
+      nav.appendChild(logoutBtn);
+    }
+
+    // Unified Mobile Bottom Navbar Rebuilder
+    const mobileNav = document.querySelector('main nav[class*="bottom"], body > nav[class*="bottom"], nav[class*="bottom-0"], nav[class*="fixed"][class*="bottom"]');
+    if (mobileNav) {
+      let mobileItems = [
+        { text: 'Home', icon: 'home', href: '/dashboard' },
+        { text: 'Trips', icon: 'map', href: '/trips' },
+        { text: 'Fleet', icon: 'minor_crash', href: '/fleet' },
+        { text: 'Expenses', icon: 'local_gas_station', href: '/expenses' },
+        { text: 'Alerts', icon: 'notifications', href: '#' }
+      ];
+
+      if (user && user.role === 'Driver') {
+        mobileItems = [
+          { text: 'Portal', icon: 'home', href: '/driver' },
+          { text: 'Alerts', icon: 'notifications', href: '#' }
+        ];
+      }
+
+      mobileNav.querySelectorAll('a').forEach(a => a.remove());
+      mobileItems.forEach(item => {
+        const isActive = item.href === currentPath;
+        const activeClass = "flex flex-col items-center justify-center text-secondary font-bold scale-95 active:scale-90 transition-transform";
+        const inactiveClass = "flex flex-col items-center justify-center text-on-surface-variant scale-95 active:scale-90 transition-transform";
+        
+        const link = document.createElement('a');
+        link.className = isActive ? activeClass : inactiveClass;
+        link.setAttribute('href', item.href);
+        link.innerHTML = `
+          <span class="material-symbols-outlined">${item.icon}</span>
+          <span class="text-[10px] font-label-md">${item.text}</span>
+        `;
+        mobileNav.appendChild(link);
+      });
+    }
+  });
+</script>
+</body>
+</html>

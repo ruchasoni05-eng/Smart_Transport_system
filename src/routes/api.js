@@ -270,4 +270,10 @@ router.post('/expenses', (req, res) => {
   res.status(201).json(newExpense);
 });
 
+// System Controls
+router.post('/system/reset', (req, res) => {
+  db.reset();
+  res.json({ success: true, message: 'Database reset completed.' });
+});
+
 export default router;

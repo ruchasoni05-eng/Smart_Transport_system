@@ -117,5 +117,10 @@ export const db = {
     data[table].splice(index, 1);
     writeDb(data);
     return true;
+  },
+
+  reset: () => {
+    writeDb(initialData);
+    return true;
   }
 };

@@ -285,7 +285,11 @@
           if (res.ok) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
-            window.location.href = '/dashboard';
+            if (data.user.role === 'Driver') {
+              window.location.href = '/driver';
+            } else {
+              window.location.href = '/dashboard';
+            }
           } else {
             alert(data.error || 'Login failed');
           }

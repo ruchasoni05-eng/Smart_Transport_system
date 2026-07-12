@@ -555,6 +555,8 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       // Update profile name
@@ -566,72 +568,90 @@
       if (roleEl) roleEl.textContent = user.role + ' (ID: ' + user.employee_id + ')';
     }
 
-    // Fix sidebar links dynamically
-    const sidebarLinks = document.querySelectorAll('aside nav a');
-    sidebarLinks.forEach(link => {
-      const textEl = link.querySelector('span:not(.material-symbols-outlined)');
-      if (!textEl) return;
-      const text = textEl.textContent.trim().toLowerCase();
-      
-      if (text.includes('dashboard')) {
-        link.setAttribute('href', '/dashboard');
-      } else if (text.includes('fleet')) {
-        link.setAttribute('href', '/fleet');
-      } else if (text.includes('driver')) {
-        link.setAttribute('href', '/drivers');
-      } else if (text.includes('trip')) {
-        link.setAttribute('href', '/trips');
-      } else if (text.includes('maintenance')) {
-        link.setAttribute('href', '/maintenance');
-      } else if (text.includes('fuel') || text.includes('expense')) {
-        link.setAttribute('href', '/expenses');
-      } else if (text.includes('analytic')) {
-        link.setAttribute('href', '/analytics');
-      } else if (text.includes('setting')) {
-        link.setAttribute('href', '#');
-      }
-    });
+    // Unified Desktop Sidebar Rebuilder
+    let navItems = [
+      { text: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
+      { text: 'Fleet', icon: 'local_shipping', href: '/fleet' },
+      { text: 'Drivers', icon: 'person', href: '/drivers' },
+      { text: 'Trips', icon: 'route', href: '/trips' },
+      { text: 'Maintenance', icon: 'build', href: '/maintenance' },
+      { text: 'Fuel & Expenses', icon: 'local_gas_station', href: '/expenses' },
+      { text: 'Analytics', icon: 'analytics', href: '/analytics' },
+      { text: 'Settings', icon: 'settings', href: '/settings' }
+    ];
 
-    // Fix active class for sidebar links based on route
-    const currentPath = window.location.pathname;
-    sidebarLinks.forEach(link => {
-      const href = link.getAttribute('href');
-      if (href && href === currentPath) {
-        link.className = "bg-secondary-container text-on-secondary-container rounded-lg mx-2 flex items-center px-4 py-3 gap-3";
-      } else {
-        link.className = "text-on-primary-container/70 flex items-center px-4 py-3 mx-2 gap-3 hover:bg-secondary/10 transition-all rounded-lg";
-      }
-    });
+    if (user && user.role === 'Driver') {
+      navItems = [
+        { text: 'Driver Portal', icon: 'dashboard', href: '/driver' },
+        { text: 'Settings', icon: 'settings', href: '/settings' }
+      ];
+    }
 
-    // Fix mobile bottom nav links
-    const mobileLinks = document.querySelectorAll('main nav a, body > nav a');
-    mobileLinks.forEach(link => {
-      const textEl = link.querySelector('span:not(.material-symbols-outlined)');
-      if (!textEl) return;
-      const text = textEl.textContent.trim().toLowerCase();
-      
-      if (text.includes('home') || text.includes('dashboard')) {
-        link.setAttribute('href', '/dashboard');
-      } else if (text.includes('trip')) {
-        link.setAttribute('href', '/trips');
-      } else if (text.includes('fleet')) {
-        link.setAttribute('href', '/fleet');
-      } else if (text.includes('alert') || text.includes('notification')) {
-        link.setAttribute('href', '#');
-      }
-    });
-
-    // Wire up sign out if needed
-    const nav = document.querySelector('aside nav');
+    const nav = document.querySelector('aside nav, nav[class*="w-sidebar-width"], nav[class*="sidebar"], aside[class*="sidebar"] nav');
     if (nav) {
+      // Remove any existing nav link elements
+      nav.querySelectorAll('a').forEach(a => a.remove());
+
+      // Append new unified links
+      navItems.forEach(item => {
+        const isActive = item.href === currentPath;
+        const activeClass = "bg-secondary-container text-on-secondary-container rounded-lg mx-2 flex items-center px-4 py-3 gap-3 transition-all duration-200 ease-in-out shadow-sm";
+        const inactiveClass = "text-on-primary-container/70 flex items-center px-4 py-3 mx-2 gap-3 hover:bg-secondary/10 transition-all rounded-lg duration-200 ease-in-out";
+        
+        const link = document.createElement('a');
+        link.className = isActive ? activeClass : inactiveClass;
+        link.setAttribute('href', item.href);
+        link.innerHTML = `
+          <span class="material-symbols-outlined">${item.icon}</span>
+          <span class="font-label-md text-label-md">${item.text}</span>
+        `;
+        nav.appendChild(link);
+      });
+      
+      // Wire up sign out link at the bottom of navigation
       const logoutBtn = document.createElement('a');
-      logoutBtn.className = "text-on-primary-container/70 flex items-center px-4 py-3 mx-2 gap-3 hover:bg-red-500/20 hover:text-red-300 transition-all rounded-lg mt-8 cursor-pointer";
+      logoutBtn.className = "text-on-primary-container/70 flex items-center px-4 py-3 mx-2 gap-3 hover:bg-red-500/20 hover:text-red-300 transition-all rounded-lg mt-8 cursor-pointer duration-200 ease-in-out";
       logoutBtn.innerHTML = '<span class="material-symbols-outlined">logout</span><span class="font-label-md text-label-md">Sign Out</span>';
       logoutBtn.addEventListener('click', () => {
         localStorage.clear();
         window.location.href = '/login';
       });
       nav.appendChild(logoutBtn);
+    }
+
+    // Unified Mobile Bottom Navbar Rebuilder
+    const mobileNav = document.querySelector('main nav[class*="bottom"], body > nav[class*="bottom"], nav[class*="bottom-0"], nav[class*="fixed"][class*="bottom"]');
+    if (mobileNav) {
+      let mobileItems = [
+        { text: 'Home', icon: 'home', href: '/dashboard' },
+        { text: 'Trips', icon: 'map', href: '/trips' },
+        { text: 'Fleet', icon: 'minor_crash', href: '/fleet' },
+        { text: 'Expenses', icon: 'local_gas_station', href: '/expenses' },
+        { text: 'Alerts', icon: 'notifications', href: '#' }
+      ];
+
+      if (user && user.role === 'Driver') {
+        mobileItems = [
+          { text: 'Portal', icon: 'home', href: '/driver' },
+          { text: 'Alerts', icon: 'notifications', href: '#' }
+        ];
+      }
+
+      mobileNav.querySelectorAll('a').forEach(a => a.remove());
+      mobileItems.forEach(item => {
+        const isActive = item.href === currentPath;
+        const activeClass = "flex flex-col items-center justify-center text-secondary font-bold scale-95 active:scale-90 transition-transform";
+        const inactiveClass = "flex flex-col items-center justify-center text-on-surface-variant scale-95 active:scale-90 transition-transform";
+        
+        const link = document.createElement('a');
+        link.className = isActive ? activeClass : inactiveClass;
+        link.setAttribute('href', item.href);
+        link.innerHTML = `
+          <span class="material-symbols-outlined">${item.icon}</span>
+          <span class="text-[10px] font-label-md">${item.text}</span>
+        `;
+        mobileNav.appendChild(link);
+      });
     }
   });
 </script>
@@ -642,29 +662,101 @@
       const res = await fetch('/api/drivers');
       const drivers = await res.json();
       
+      // Update KPIs dynamically
+      const kpiTiles = document.querySelectorAll('main .grid > div');
+      if (kpiTiles.length >= 4) {
+        // Total Drivers
+        const totalDriversEl = kpiTiles[0].querySelector('.font-display-lg');
+        if (totalDriversEl) totalDriversEl.textContent = drivers.length;
+        
+        // Fleet Avg Score
+        const scores = drivers.map(d => d.safety_score || (85 + (d.id * 3) % 15));
+        const avgScore = drivers.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '0';
+        const avgScoreEl = kpiTiles[1].querySelector('.font-display-lg');
+        if (avgScoreEl) avgScoreEl.textContent = avgScore;
+        
+        // License Expiry
+        const expired = drivers.filter(d => d.license_status === 'Expired').length;
+        const expiryEl = kpiTiles[2].querySelector('.font-display-lg');
+        if (expiryEl) expiryEl.textContent = String(expired).padStart(2, '0');
+        
+        // On-Duty Drivers
+        const onDuty = drivers.filter(d => d.status === 'Active' || d.status === 'In Transit').length;
+        const onDutyEl = kpiTiles[3].querySelector('.font-display-lg');
+        if (onDutyEl) onDutyEl.textContent = onDuty;
+        const utilizationPct = drivers.length ? ((onDuty / drivers.length) * 100).toFixed(0) : 0;
+        const utilText = kpiTiles[3].querySelector('span.text-body-sm') || kpiTiles[3].querySelector('span.text-on-surface-variant\\/50');
+        if (utilText) utilText.textContent = `${utilizationPct}% Utilization`;
+      }
+
       const tbody = document.querySelector('table tbody');
       if (tbody) {
         tbody.innerHTML = '';
         drivers.forEach(d => {
-          let statusPill = '';
-          if (d.status === 'Active') statusPill = '<span class="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-[11px] font-bold uppercase">Active</span>';
-          else if (d.status === 'In Transit') statusPill = '<span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-[11px] font-bold uppercase">In Transit</span>';
-          else statusPill = '<span class="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-[11px] font-bold uppercase">${d.status}</span>';
+          const initials = d.name.split(' ').map(n => n[0]).join('').toUpperCase();
+          const score = d.safety_score || (85 + (d.id * 3) % 15);
           
-          let licensePill = d.license_status === 'Active' 
-            ? '<span class="text-green-600 font-bold uppercase text-[11px]">Valid</span>'
-            : '<span class="text-red-600 font-bold uppercase text-[11px]">Expired</span>';
-            
+          let statusPill = '';
+          if (d.status === 'Active' || d.status === 'Available') {
+            statusPill = `
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                Available
+              </span>
+            `;
+          } else if (d.status === 'In Transit') {
+            statusPill = `
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                On Trip
+              </span>
+            `;
+          } else if (d.status === 'Suspended') {
+            statusPill = `
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                Suspended
+              </span>
+            `;
+          } else {
+            statusPill = `
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-500/10 text-slate-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                Off Duty
+              </span>
+            `;
+          }
+
+          let scoreColor = 'bg-green-500';
+          if (score < 80) scoreColor = 'bg-yellow-500';
+          if (score < 70) scoreColor = 'bg-red-500';
+          
           tbody.innerHTML += `
-            <tr class="hover:bg-surface-container-low transition-colors border-b border-outline-variant/30">
-              <td class="px-6 py-4 font-semibold">${d.name}</td>
-              <td class="px-6 py-4 font-data-mono">TX-${d.employee_id}</td>
-              <td class="px-6 py-4 font-data-mono">${d.cdl_class}</td>
-              <td class="px-6 py-4 font-data-mono">${d.license_expiry}</td>
-              <td class="px-6 py-4">${licensePill}</td>
-              <td class="px-6 py-4">${statusPill}</td>
+            <tr class="hover:bg-surface-container-low transition-colors group border-b border-outline-variant/30">
               <td class="px-6 py-4">
-                <button class="text-secondary hover:underline text-[12px] font-bold uppercase" onclick="showDriverDrawer(${d.id})">Edit</button>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs">${initials}</div>
+                  <div>
+                    <div class="font-body-md text-body-md font-semibold">${d.name}</div>
+                    <div class="text-body-sm text-on-surface-variant/60">${d.cdl_class}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 font-data-mono text-data-mono">TX-${d.employee_id}482-A</td>
+              <td class="px-6 py-4 font-body-md text-body-md text-on-surface">${d.license_expiry}</td>
+              <td class="px-6 py-4">
+                <div class="flex flex-col gap-1 w-24">
+                  <div class="flex justify-between items-center">
+                    <span class="text-body-sm font-semibold text-primary">${score}%</span>
+                  </div>
+                  <div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+                    <div class="safety-fill ${scoreColor} h-full transition-all duration-500" style="width: ${score}%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">${statusPill}</td>
+              <td class="px-6 py-4 text-right">
+                <button class="text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:underline font-label-md text-label-md" onclick="showDriverDrawer(${d.id})">Manage</button>
               </td>
             </tr>
           `;

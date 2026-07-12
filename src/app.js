@@ -9,6 +9,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Disable browser caching for static assets during development
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  next();
+});
+
 // Serve static assets from public folder
 app.use(express.static(path.resolve('public')));
 
@@ -50,6 +56,14 @@ app.get('/expenses', (req, res) => {
 
 app.get('/analytics', (req, res) => {
   res.sendFile(path.resolve('public/analytics.html'));
+});
+
+app.get('/settings', (req, res) => {
+  res.sendFile(path.resolve('public/settings.html'));
+});
+
+app.get('/driver', (req, res) => {
+  res.sendFile(path.resolve('public/driver.html'));
 });
 
 // Fallback to login or 404
